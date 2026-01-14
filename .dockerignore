@@ -1,0 +1,12 @@
+Dockerfile
+docker-compose.yml
+terraform.tfstate
+.git
+ops
+environment.txt
+Makefile
+README.md
+helm
+TEST_SCENARII_DONE.md
+TEST_SCENARII_TODO.md
+cagette-*.tar

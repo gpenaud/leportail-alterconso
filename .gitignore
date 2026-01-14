@@ -1,0 +1,53 @@
+*.tgz
+*.zip
+
+# repository ignores
+# ------------------------------------------------------------------------------
+
+scripts/catalogs
+services/mysql/dumps
+config.env
+
+# app ignores
+# ------------------------------------------------------------------------------
+
+src/www/*.n
+src/*.php
+src/config.xml
+src/www/plugin/*
+src/Makefile*
+src/lang/master/tmp/*
+src/frontend/node_modules*
+src/*.map
+src/*.haxelib*
+src/html
+src/frontend/.temp
+src/*.tar
+
+src/*.DS_Store*
+
+src/lang/master/tpl/plugin/*
+src/backend/lang/*
+src/backend/temploc2.n
+
+src/lang/fr/tpl/*
+src/lang/en/tpl/*
+src/lang/de/tpl/*
+src/lang/es/tpl/*
+src/lang/fr/tmp/*.n
+src/lang/en/tmp/*.n
+src/lang/de/tmp/*.n
+src/lang/es/tmp/*.n
+
+# src/www/lang/*.mo
+# src/www/file/*
+# src/www/js/*
+# src/www/css/.sass-cache
+# src/www/css/*.css
+# src/www/*.xls
+# src/www/*.xlsx
+# src/!www/js/libs.dev.js
+# src/!www/js/libs.prod.js
+# src/!www/js/fetch.umd.js
+src/backend/lang
+src/codes.sh

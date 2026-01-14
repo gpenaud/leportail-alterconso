@@ -1,0 +1,6 @@
+-D smtpmailer=1.0.0-rc.0
+# @install: lix --silent download "haxelib:/smtpmailer#1.0.0-rc.0" into smtpmailer/1.0.0-rc.0/haxelib
+-lib asys
+-lib mime
+-lib tink_multipart
+-cp ${HAXE_LIBCACHE}/smtpmailer/1.0.0-rc.0/haxelib/src

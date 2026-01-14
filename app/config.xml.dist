@@ -1,0 +1,29 @@
+<config
+	lang="fr"
+	langs="fr;de;en"
+	langnames="Français;Deutsch;English"
+
+	host="localhost"
+	name = "Alterconso"
+	default_email = "alterconso@leportail.org"
+	webmaster_email = "alterconso@leportail.org"
+
+	database="mysql://user:password@host/db"
+	sqllog="1"
+
+	debug="1"
+	cache="0"
+	maintain="0"
+	cachetpl="0"
+	key="localdevkey"
+
+	mailer_host="mailer"
+	mailer_port="5000"
+
+	smtp_host="smtp.mandrillapp.com"
+	smtp_port="587"
+	smtp_user="mon_email@mon_domaine.fr"
+	smtp_pass="blabla"
+
+	alterconso_api="http://localhost:3010"
+/>
