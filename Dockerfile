@@ -21,26 +21,26 @@ RUN npm install --global \
   haxe-modular
 
 # backend dependencies compilation
-COPY ./app/backend /app/backend
-COPY ./app/devLibs /app/devLibs
+COPY ./backend /app/backend
+COPY ./devLibs /app/devLibs
 # download lix dependencies for backend
 # NOTE: cagette-pro is a private repository and requires authentication, so we remove it
 RUN cd /app/backend && rm haxe_libraries/cagette-pro.hxml && lix download
 
 # frontend dependencies compilation
-COPY ./app/frontend /app/frontend
+COPY ./frontend /app/frontend
 # download lix dependencies for frontend
 RUN cd /app/frontend && lix download
 
 # copy sources
-COPY ./app/build /app/build
-COPY ./app/common /app/common
-COPY ./app/data /app/data
-COPY ./app/js /app/js
-COPY ./app/lang /app/lang
-COPY ./app/src /app/src
-COPY ./app/www /app/www
-COPY ./app/config.xml.dist /app/config.xml
+COPY ./build /app/build
+COPY ./common /app/common
+COPY ./data /app/data
+COPY ./js /app/js
+COPY ./lang /app/lang
+COPY ./src /app/src
+COPY ./www /app/www
+COPY ./config.xml.dist /app/config.xml
 
 RUN chmod 777 /app/lang/master/tmp
 
@@ -73,7 +73,7 @@ RUN \
     # allow setcap command to be used for apache2 command execution as non-root users
     libcap2-bin
 
-COPY --chown=www-data:www-data --from=alterconso-sourcecode /app /var/www/alterconso
+COPY --chown=www-data:www-data --from=alterconso-sourcecode / /var/www/alterconso
 
 # Haxe environment variables
 ENV HAXE_STD_PATH=/usr/lib/x86_64-linux-gnu/neko
@@ -106,7 +106,7 @@ RUN rm --force \
   /etc/apache2/sites-enabled/000-default.conf
 
 # copy cron file
-COPY --chown=www-data:www-data ./scripts/crontab.sh /var/www/alterconso/crontab.sh
+COPY --chown=www-data:www-data ./utilities/crontab.sh /var/www/alterconso/crontab.sh
 RUN sh /var/www/alterconso/crontab.sh
 
 # run multiples apache2-related operations
