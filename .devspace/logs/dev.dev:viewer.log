@@ -1,0 +1,11 @@
+{"level":"info","msg":"dev:viewer Waiting for pod to become ready...","time":"2026-01-14T21:19:07+01:00"}
+{"level":"warning","msg":"dev:viewer Pod local-alterconso-webapp-devspace-744694b86d-7pdvt: Error: ErrImageNeverPull (Failed)","time":"2026-01-14T21:19:17+01:00"}
+{"level":"warning","msg":"dev:viewer Pod local-alterconso-webapp-devspace-744694b86d-7pdvt: Container image \"alterconso/webapp:1.0.0\" is not present with pull policy of Never (ErrImageNeverPull)","time":"2026-01-14T21:19:17+01:00"}
+{"level":"warning","msg":"dev:viewer DevSpace is waiting, because Pod local-alterconso-webapp-devspace-744694b86d-7pdvt has status: ErrImageNeverPull","time":"2026-01-14T21:19:17+01:00"}
+{"level":"warning","msg":"dev:viewer DevSpace is waiting, because Pod local-alterconso-webapp-devspace-744694b86d-7pdvt has status: ErrImageNeverPull","time":"2026-01-14T21:19:28+01:00"}
+{"level":"warning","msg":"dev:viewer DevSpace is waiting, because Pod local-alterconso-webapp-devspace-744694b86d-7pdvt has status: ErrImageNeverPull","time":"2026-01-14T21:19:38+01:00"}
+{"level":"warning","msg":"dev:viewer DevSpace is waiting, because Pod local-alterconso-webapp-devspace-744694b86d-7pdvt has status: ErrImageNeverPull","time":"2026-01-14T21:19:49+01:00"}
+{"level":"warning","msg":"dev:viewer DevSpace is waiting, because Pod local-alterconso-webapp-devspace-744694b86d-7pdvt has status: ErrImageNeverPull","time":"2026-01-14T21:19:59+01:00"}
+{"level":"warning","msg":"dev:viewer DevSpace is waiting, because Pod local-alterconso-webapp-devspace-744694b86d-7pdvt has status: ErrImageNeverPull","time":"2026-01-14T21:20:10+01:00"}
+{"level":"warning","msg":"dev:viewer DevSpace is waiting, because Pod local-alterconso-webapp-devspace-744694b86d-7pdvt has status: ErrImageNeverPull","time":"2026-01-14T21:20:20+01:00"}
+{"level":"warning","msg":"dev:viewer DevSpace is waiting, because Pod local-alterconso-webapp-devspace-744694b86d-7pdvt has status: ErrImageNeverPull","time":"2026-01-14T21:20:31+01:00"}

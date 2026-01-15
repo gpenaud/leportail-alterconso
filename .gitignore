@@ -7,6 +7,7 @@
 scripts/catalogs
 services/mysql/dumps
 config.env
+utilities/dump.sql
 
 # app ignores
 # ------------------------------------------------------------------------------
@@ -51,3 +52,4 @@ src/lang/es/tmp/*.n
 # src/!www/js/fetch.umd.js
 src/backend/lang
 src/codes.sh
+

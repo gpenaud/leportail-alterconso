@@ -13,7 +13,7 @@ build:
 
 ## Push webapp image to scaleway repository
 push:
-	docker push ghcr.io/gpenaud/alterconso:latest
+	
 
 ## Build, Tag, then Push image at ${tag} version
 publish: build tag push

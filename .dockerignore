@@ -10,3 +10,6 @@ helm
 TEST_SCENARII_DONE.md
 TEST_SCENARII_TODO.md
 cagette-*.tar
+conf/
+utilities/
+!utilities/crontab.sh
