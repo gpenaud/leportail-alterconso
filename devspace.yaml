@@ -30,7 +30,7 @@ commands:
   inject:
     description: Inject a 6-month old backup into database.  
     command: |-
-      kubectl exec -i statefulsets/local-alterconso-database -- mysql -u root -proot --binary-mode --max_allowed_packet=64M db < utilities/inject.sql
+      kubectl exec -i statefulsets/local-alterconso-database -- mysql -u root -proot --binary-mode --max_allowed_packet=64M db < utilities/dump.sql
     after: |-
       sudo rm -rf /mnt/k3s/alterconso/*
   debug:
