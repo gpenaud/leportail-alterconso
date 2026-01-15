@@ -17,10 +17,6 @@ spec:
         {{- include "database.labels" . | nindent 8 }}
     spec:
       terminationGracePeriodSeconds: 10
-      volumes:
-        - name: database-data
-          persistentVolumeClaim:
-            claimName: {{ $fullname }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
