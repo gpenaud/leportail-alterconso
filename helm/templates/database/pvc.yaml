@@ -1,0 +1,16 @@
+---
+{{- if .Values.database.persistentVolume.enabled -}}
+{{- $fullname := include "database.fullname" . -}}
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $fullname }}
+spec:
+  accessModes:
+    {{ toYaml .Values.database.persistentVolume.accessModes | indent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.database.persistentVolume.capacity.storage }}
+  storageClassName: {{ .Values.database.persistentVolume.storageClass }}
+{{- end }}

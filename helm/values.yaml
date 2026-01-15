@@ -1,0 +1,79 @@
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
+webapp:
+  # system
+  replicaCount: 1
+  containerPort: 80
+  env: {}
+  env_as_secrets: {}
+  image:
+    repository: ghcr.io/gpenaud/alterconso
+    tag: latest
+    pullPolicy: IfNotPresent
+  imagePullSecrets:
+    - name: dockerconfigjson-github-com
+  serviceAccount:
+    create: false
+    name: ""
+  # network
+  service:
+    type: ClusterIP
+    ports:
+      - name: http
+        port: 80
+  ingress:
+    enabled: true
+    className: traefik
+    annotations:
+      cert-manager.io/cluster-issuer: "mkcert"
+    hosts:
+      - name: alterconso.gpenaud.localhost
+        path: /
+        tls: true 
+
+  # app
+  vhost: alterconso.leportail.org
+  email:
+    default: nobody@my-domain.org
+    admin: admin@my-domain.org
+  database:
+    port: 3306
+    user: root
+    password: root
+    name: db
+  config:
+    sql_log_enabled: true
+    debug_enabled: true
+    password_salt_cache_key: localdevkey
+    api_url: http://localhost:3010
+
+database:
+  replicaCount: 1
+  image:
+    repository: mysql
+    pullPolicy: IfNotPresent
+    tag: "5.7"
+  env:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: db
+  env_as_secrets: {}
+  persistentVolume:
+    enabled: true
+    capacity:
+      storage: 2Gi
+    accessModes:
+      - ReadWriteOnce
+    storageClass: local-storage
+    local:
+      path: /mnt/k3s/alterconso
+    nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - t490s
+    

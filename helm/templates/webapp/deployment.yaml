@@ -1,0 +1,63 @@
+{{- $fullname := include "webapp.fullname" . -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullname }}
+  labels:
+    {{- include "webapp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.webapp.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "webapp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "webapp.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.webapp.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ .Values.webapp.serviceAccount.name }}
+      containers:
+        - name: webapp
+          image: "{{ .Values.webapp.image.repository }}:{{ .Values.webapp.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.webapp.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.webapp.containerPort }}
+          volumeMounts:
+            - name: {{ $fullname }}
+              mountPath: "/var/www/alterconso/config.xml"
+              subPath: "config.xml"
+              readOnly: true
+            - name: {{ $fullname }}
+              mountPath: "/etc/apache2/sites-available/{{ $.Values.webapp.vhost }}.conf"
+              subPath: "vhost.conf"
+              readOnly: true
+            - name: {{ $fullname }}
+              mountPath: "/etc/apache2/sites-enabled/{{ $.Values.webapp.vhost }}.conf"
+              subPath: "vhost.conf"
+              readOnly: true
+          env:
+            {{- range $key, $value := .Values.webapp.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+            {{- end }}
+            {{- range $key, $value := .Values.webapp.env_as_secrets }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullname }}
+                  key: {{ $key }}
+            {{- end }}
+      volumes:
+      - name: {{ $fullname }}
+        configMap:
+          name: {{ $fullname }}
+          items:
+          - key: config.xml
+            path: config.xml
+          - key: vhost.conf
+            path: vhost.conf

@@ -1,0 +1,17 @@
+---
+{{- $fullname := include "database.fullname" . -}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullname }}
+  labels:
+    {{- include "database.selectorLabels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    {{- include "database.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: tcp
+      protocol: TCP
+      port: 3306

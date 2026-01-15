@@ -1,0 +1,22 @@
+{{- $fullName := include "webapp.fullname" . -}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "webapp.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.webapp.service.type }}
+  ipFamilyPolicy: PreferDualStack
+  ipFamilies:
+    - IPv4
+  ports:
+    {{- range $port := .Values.webapp.service.ports }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      targetPort: {{ default $port.port $port.target }}
+      protocol: TCP
+    {{- end }}
+  selector:
+    {{- include "webapp.selectorLabels" . | nindent 4 }}

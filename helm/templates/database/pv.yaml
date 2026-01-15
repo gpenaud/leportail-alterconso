@@ -1,0 +1,23 @@
+---
+{{- if .Values.database.persistentVolume.enabled -}}
+{{- $fullname := include "database.fullname" . -}}
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $fullname }}
+spec:
+  capacity:
+    storage: {{ .Values.database.persistentVolume.capacity.storage }}
+  volumeMode: Filesystem
+  accessModes:
+    {{ toYaml .Values.database.persistentVolume.accessModes }}
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: {{ .Values.database.persistentVolume.storageClass }}
+  {{- if  (eq "local-storage" .Values.database.persistentVolume.storageClass) }}
+  local:
+    path: {{ .Values.database.persistentVolume.local.path }}
+  nodeAffinity:
+      {{- toYaml .Values.database.persistentVolume.nodeAffinity | nindent 6 }}
+  {{- end }}
+{{- end }}

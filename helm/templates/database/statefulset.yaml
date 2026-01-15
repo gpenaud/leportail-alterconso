@@ -1,0 +1,67 @@
+---
+{{- $fullname := include "database.fullname" . -}}
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ $fullname }}
+spec:
+  replicas: {{ .Values.database.replicaCount }}
+  serviceName: {{ $fullname }}
+  selector:
+    matchLabels:
+      {{- include "database.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "database.labels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: database-data
+          persistentVolumeClaim:
+            claimName: {{ $fullname }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+          imagePullPolicy: {{ .Values.database.image.pullPolicy }}
+          ports:
+            - name: database
+              protocol: TCP
+              containerPort: 3306
+          env:
+            {{- range $key, $value := $.Values.database.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+            {{- end }}
+            {{- range $key, $value := $.Values.database.env_as_secrets }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullname }}
+                  key: {{ $key }}
+            {{- end }}
+          volumeMounts:
+            - name: {{ $fullname }}-data
+              mountPath: "/var/lib/mysql"
+            - name: {{ $fullname }}-config
+              mountPath: "/etc/mysql/conf.d"
+            - name: {{ $fullname }}-scripts
+              mountPath: "/etc/mysql/scripts"
+              readOnly: true
+      volumes:
+        - name: {{ $fullname }}-data
+          persistentVolumeClaim:
+            claimName: {{ $fullname }}
+        - name: {{ $fullname }}-config
+          configMap:
+            name: {{ $fullname }}
+            items:
+            - key: "my.cnf"
+              path: "my.cnf"
+        - name: {{ $fullname }}-scripts
+          configMap:
+            name: {{ $fullname }}-scripts
+            items:
+            - key: "backup.sh"
+              path: "backup.sh"

@@ -1,0 +1,52 @@
+---
+{{- $fullname := include "webapp.fullname" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}
+data:
+  config.xml: |
+    <config
+    	lang="fr"
+    	langs="fr;de;en"
+    	langnames="Français;Deutsch;English"
+
+      host="{{ .Values.webapp.vhost }}"
+      name = "Alterconso - Le Portail"
+      default_email = "{{ .Values.webapp.email.default }}"
+      webmaster_email = "{{ .Values.webapp.email.admin }}"
+
+      database="database://{{ .Values.webapp.database.user }}:{{ .Values.webapp.database.password }}@{{- include "database.serviceFqdn" . }}:{{ .Values.webapp.database.port }}/{{ .Values.webapp.database.name }}"
+
+      {{- if .Values.webapp.config.sql_log_enabled }}
+      sqllog="1"
+      {{ else }}
+      sqllog="0"
+      {{ end }}
+      {{- if .Values.webapp.config.debug_enabled }}
+      debug="1"
+      {{ else }}
+      debug="0"
+      {{ end }}
+    	cache="0"
+    	maintain="0"
+    	cachetpl="0"
+      key="{{ .Values.webapp.config.password_salt_cache_key }}"
+      alterconso_api="{{ .Values.webapp.config.api_url }}"
+    />
+
+  vhost.conf: |
+    <VirtualHost *:80>
+      ServerName  {{ .Values.webapp.vhost }}
+      ServerAdmin  guillaume.penaud@gmail.com
+
+      DocumentRoot /var/www/alterconso/www
+
+      <Directory /var/www/alterconso/www>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+        EnableSendfile Off
+      </Directory>
+    </VirtualHost>

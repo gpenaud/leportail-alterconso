@@ -1,0 +1,27 @@
+apiVersion: v2
+name: alterconso
+version: 0.0.1
+
+description: Helm chart for Alterconso, a free fork of Cagette, a tool to manage selling and distribution of ethical food products.
+type: application
+
+keywords:
+  - food
+  - ethical
+
+home: https://alterconso.leportail.org
+
+sources:
+  - https://github.com/gpenaud/alterconso.git
+
+dependencies: []
+
+maintainers:
+  - name: Guillaume Penaud
+    email: guillaume.penaud@gmail.com
+
+icon: A URL to an SVG or PNG image to be used as an icon (optional).
+
+appVersion: "1.0.0"
+deprecated: false
+annotations: {}
