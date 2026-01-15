@@ -1,0 +1,41 @@
+version: v2beta1
+name: alterconso
+
+vars:
+  RELEASE: local
+
+imports: []
+images: {}
+
+deployments:
+  alterconso:
+    helm:
+      chart:
+        path: ./helm
+      releaseName: ${RELEASE}
+      valuesFiles:
+        - helm/values.yaml
+
+dev:
+  webapp:
+    labelSelector:
+      app.kubernetes.io/instance: ${RELEASE}
+      app.kubernetes.io/name: alterconso
+      app.kubernetes.io/component: alterconso-webapp
+    containers:
+      webapp:
+        command: ["sh", "-c", "/usr/sbin/apache2ctl -D FOREGROUND"]
+
+commands:
+  inject:
+    description: Inject a 6-month old backup into database.  
+    command: |-
+      kubectl exec -i statefulsets/local-alterconso-database -- mysql -u root -proot --binary-mode --max_allowed_packet=64M db < utilities/inject.sql
+    after: |-
+      sudo rm -rf /mnt/k3s/alterconso/*
+  debug:
+    description: Dumps the current helm templates.
+    command: helm template --debug ./helm/
+  test:
+    description: A dry-run of current helm package.
+    command: helm install --dry-run --debug local ./helm/
