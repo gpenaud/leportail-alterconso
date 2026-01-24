@@ -8,6 +8,8 @@ vars:
 imports: []
 images: {}
 
+# ------------------------------------------------------------------------------ #
+
 deployments:
   dockerconfigjson:
     kubectl:
@@ -43,6 +45,8 @@ deployments:
             local:
               path: /mnt/k3s/devspace/alterconso
 
+# ------------------------------------------------------------------------------ #
+
 dev:
   webapp:
     namespace: ${NAMESPACE}
@@ -59,6 +63,8 @@ dev:
       app.kubernetes.io/instance: ${RELEASE}
       app.kubernetes.io/name: alterconso
       app.kubernetes.io/component: alterconso-database
+
+# ------------------------------------------------------------------------------ #
 
 commands:
   inject:
