@@ -53,3 +53,7 @@ src/lang/es/tmp/*.n
 src/backend/lang
 src/codes.sh
 
+# development tools ignores
+# ------------------------------------------------------------------------------
+
+.devspace
