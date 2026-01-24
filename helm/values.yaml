@@ -9,8 +9,9 @@ webapp:
   env: {}
   env_as_secrets: {}
   image:
-    repository: ghcr.io/gpenaud/alterconso
-    tag: latest
+    registry: ghcr.io/gpenaud
+    repository: alterconso
+    version: latest
     pullPolicy: IfNotPresent
   imagePullSecrets:
     - name: dockerconfigjson-github-com
