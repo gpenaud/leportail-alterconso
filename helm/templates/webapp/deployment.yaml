@@ -23,7 +23,7 @@ spec:
       serviceAccountName: {{ .Values.webapp.serviceAccount.name }}
       containers:
         - name: webapp
-          image: "{{ .Values.webapp.image.repository }}:{{ .Values.webapp.image.tag | default $.Chart.AppVersion }}"
+          image: {{- include "webapp.image" . | indent 1 }}
           imagePullPolicy: {{ .Values.webapp.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.webapp.containerPort }}

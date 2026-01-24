@@ -37,3 +37,14 @@ app.kubernetes.io/version: {{ (include "webapp.imageId" .) | trunc 15 | trimPref
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/part-of: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Create the image path for the passed in image field
+*/}}
+{{- define "webapp.image" -}}
+{{- if eq (substr 0 7 .Values.webapp.image.version) "sha256:" -}}
+{{- printf "%s/%s@%s" .Values.webapp.image.registry .Values.webapp.image.repository .Values.webapp.image.version -}}
+{{- else -}}
+{{- printf "%s/%s:%s" .Values.webapp.image.registry .Values.webapp.image.repository .Values.webapp.image.version -}}
+{{- end -}}
+{{- end -}}
