@@ -40,6 +40,9 @@ deployments:
       valuesFiles:
         - helm/values.yaml
       values:
+        webapp:
+          image:
+            version: 1.0.2
         database:
           persistentVolume:
             local:
