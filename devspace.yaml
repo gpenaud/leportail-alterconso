@@ -3,21 +3,49 @@ name: alterconso
 
 vars:
   RELEASE: local
+  NAMESPACE: default
 
 imports: []
 images: {}
 
 deployments:
+  dockerconfigjson:
+    kubectl:
+      inlineManifest: |-
+        apiVersion: external-secrets.io/v1
+        kind: ExternalSecret
+        metadata:
+          name: dockerconfigjson-github-com
+          namespace: ${NAMESPACE}
+        spec:
+          refreshInterval: 1h
+          secretStoreRef:
+            kind: ClusterSecretStore
+            name: kube-system-secret-store
+          target:
+            name: dockerconfigjson-github-com
+            template:
+              type: kubernetes.io/dockerconfigjson
+          dataFrom:
+            - extract:
+                key: dockerconfigjson-github-com
   alterconso:
+    namespace: ${NAMESPACE}
     helm:
       chart:
         path: ./helm
       releaseName: ${RELEASE}
       valuesFiles:
         - helm/values.yaml
+      values:
+        database:
+          persistentVolume:
+            local:
+              path: /mnt/k3s/devspace/alterconso
 
 dev:
   webapp:
+    namespace: ${NAMESPACE}
     labelSelector:
       app.kubernetes.io/instance: ${RELEASE}
       app.kubernetes.io/name: alterconso
@@ -25,6 +53,12 @@ dev:
     containers:
       webapp:
         command: ["sh", "-c", "/usr/sbin/apache2ctl -D FOREGROUND"]
+  database:
+    namespace: ${NAMESPACE}
+    labelSelector:
+      app.kubernetes.io/instance: ${RELEASE}
+      app.kubernetes.io/name: alterconso
+      app.kubernetes.io/component: alterconso-database
 
 commands:
   inject:
@@ -39,3 +73,14 @@ commands:
   test:
     description: A dry-run of current helm package.
     command: helm install --dry-run --debug local ./helm/
+  package:
+    description: Package Helm source code 
+    command: |-
+      helm package ./helm/ --destination ./../helm-charts
+      helm repo index ./../helm-charts
+  encrypt:
+    description: Encrypt argument with kubeseal controller
+    command: |-
+      echo -n $@ | /usr/local/bin/kubeseal \
+        --context local --namespace kube-system --raw --scope cluster-wide \
+        --controller-namespace=kube-system
