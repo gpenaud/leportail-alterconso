@@ -23,7 +23,11 @@ spec:
       serviceAccountName: {{ .Values.webapp.serviceAccount.name }}
       containers:
         - name: webapp
-          image: {{- include "webapp.image" . | indent 1 }}
+          {{- if eq (substr 0 7 .Values.webapp.image.version) "sha256:" }}
+          image: {{ printf "%s/%s@%s" .Values.webapp.image.registry .Values.webapp.image.repository .Values.webapp.image.version }}
+          {{- else }}
+          image: {{ printf "%s/%s:%s" .Values.webapp.image.registry .Values.webapp.image.repository .Values.webapp.image.version }}
+          {{- end }}
           imagePullPolicy: {{ .Values.webapp.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.webapp.containerPort }}

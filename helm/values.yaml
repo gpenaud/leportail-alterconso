@@ -32,7 +32,7 @@ webapp:
     hosts:
       - name: alterconso.localhost
         path: /
-        tls: true 
+        tls: true
 
   # app
   vhost: alterconso.localhost
