@@ -73,7 +73,7 @@ RUN \
     # allow setcap command to be used for apache2 command execution as non-root users
     libcap2-bin
 
-COPY --chown=www-data:www-data --from=alterconso-sourcecode / /var/www/alterconso
+COPY --chown=www-data:www-data --from=alterconso-sourcecode /app /var/www/alterconso
 
 # Haxe environment variables
 ENV HAXE_STD_PATH=/usr/lib/x86_64-linux-gnu/neko
