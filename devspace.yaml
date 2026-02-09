@@ -4,11 +4,27 @@ name: alterconso
 vars:
   RELEASE: local
   NAMESPACE: default
+  STORAGE_PATH: /tmp/devspace-alterconso
 
-imports: []
-images: {}
+images:
+  alterconso:
+    image: ghcr.io/gpenaud/alterconso
+    context: .
+    dockerfile: Dockerfile
+    tags:
+      - dev-latest
 
-# ------------------------------------------------------------------------------ #
+functions:
+  create_storage_path: mkdir -p ${STORAGE_PATH}
+  clean_storage_path: sudo rm -rf ${STORAGE_PATH:-/void}
+
+pipelines:
+  deploy: |-
+    create_storage_path
+    create_deployments --all
+  purge: |-
+    purge_deployments --all
+    clean_storage_path
 
 deployments:
   dockerconfigjson:
@@ -17,7 +33,7 @@ deployments:
         apiVersion: external-secrets.io/v1
         kind: ExternalSecret
         metadata:
-          name: dockerconfigjson-github-com
+          name: regcred
           namespace: ${NAMESPACE}
         spec:
           refreshInterval: 1h
@@ -25,28 +41,27 @@ deployments:
             kind: ClusterSecretStore
             name: kube-system-secret-store
           target:
-            name: dockerconfigjson-github-com
+            name: regcred
             template:
               type: kubernetes.io/dockerconfigjson
           dataFrom:
             - extract:
-                key: dockerconfigjson-github-com
+                key: regcred
   alterconso:
     namespace: ${NAMESPACE}
     helm:
       chart:
         path: ./helm
-      releaseName: ${RELEASE}
       valuesFiles:
         - helm/values.yaml
       values:
         webapp:
           image:
-            version: 1.0.2
+            version: dev-latest
         database:
           persistentVolume:
             local:
-              path: /mnt/k3s/devspace/alterconso
+              path: ${STORAGE_PATH}
 
 # ------------------------------------------------------------------------------ #
 
@@ -70,12 +85,16 @@ dev:
 # ------------------------------------------------------------------------------ #
 
 commands:
+  recreate-cluster:
+    description: Recreate the cluster with Ansible playbook 
+    command: |-
+      ANSIBLE_CONFIG=${ANSIBLE_PATH}/ansible.cfg ansible-playbook ${ANSIBLE_PATH}/playbooks/install-k3s-lab.yml
   inject:
     description: Inject a 6-month old backup into database.  
     command: |-
       kubectl exec -i statefulsets/local-alterconso-database -- mysql -u root -proot --binary-mode --max_allowed_packet=64M db < utilities/dump.sql
     after: |-
-      sudo rm -rf /mnt/k3s/alterconso/*
+      sudo rm -rf ${STORAGE_PATH:-.}/*
   debug:
     description: Dumps the current helm templates.
     command: helm template --debug ./helm/
