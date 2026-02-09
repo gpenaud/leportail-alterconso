@@ -14,7 +14,7 @@ webapp:
     version: latest
     pullPolicy: IfNotPresent
   imagePullSecrets:
-    - name: dockerconfigjson-github-com
+    - name: regcred
   serviceAccount:
     create: false
     name: ""
@@ -76,5 +76,5 @@ database:
           - key: kubernetes.io/hostname
             operator: In
             values:
-            - t490s
+              - work
     
